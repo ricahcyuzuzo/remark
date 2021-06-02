@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import usersRoutes from './routes/user.routes';
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -20,6 +21,8 @@ app.use((req, res, next) => {
   return next();
 });
 
+app.use('/api', usersRoutes);
+
 app.get('/', (req, res) => {
   res.status(200).json({
     status: 200,
@@ -36,7 +39,7 @@ app.use((req, res) => {
 
 app.listen(port, console.log(`The app is running at localhost on port: ${port}`));
 
-mongoose.connect('mongodb://localhost/contribution', {
+mongoose.connect('mongodb://localhost/remark', {
   useNewUrlParser: true,
 });
 
