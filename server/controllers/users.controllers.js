@@ -57,6 +57,50 @@ class UserControllers {
             });
         }
     }
+
+    static signin(req, res){
+        const { phoneNumber, password } = req.body;
+        const { error } = validateUser.validateSignIn(userBodyModels.signInBody(req));
+
+        if(error){
+            return res.status(409).json({
+                status: 409,
+                message: error.details[0].message.replace(/"/g, '')
+            });
+        }
+
+        User.findOne({ phoneNumber: phoneNumber })
+            .exec()
+            .then((docs) => {
+                console.log('From Database: ', docs);
+                const compare = Auth.checkPassword(password, docs.password);
+                if(compare){
+                    if(docs){
+                        res.status(201).json({
+                            status: 201,
+                            message: 'Login Successful',
+                            token: Auth.generateToken(docs)
+                        });
+                    }else{
+                        res.status(404).json({
+                            status: 404,
+                            message: 'Wrong phone number or password'
+                        });
+                    }
+                }else{
+                    res.status(404).json({
+                        status: 404,
+                        message: 'Wrong phone number or password'
+                    });
+                }
+            })
+            .catch((err) => {
+                res.status(500).json({
+                    status: 500,
+                    error: err
+                });
+            });
+    }
 }
 
 export default UserControllers;

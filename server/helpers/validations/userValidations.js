@@ -36,4 +36,13 @@ const validatePassword = (password) => {
     return schema.validate(password);
 };
 
-export default { validateSignUp, validatePassword }
+const validateSignIn = (user) => {
+    const schema = Hapi.object().keys({
+        phoneNumber: Hapi.string().required().min(10).max(10),
+        password: Hapi.string().required()
+    });
+
+    return schema.validate(user);
+}
+
+export default { validateSignUp, validatePassword, validateSignIn }

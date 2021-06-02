@@ -1,3 +1,4 @@
+import { use } from "chai";
 
 class userBody {
     static signUpBody (req){
@@ -8,6 +9,15 @@ class userBody {
             phoneNumber: req.body.phoneNumber,
             password: req.body.password,
             gender: req.body.gender
+        }
+
+        return user;
+    }
+
+    static signInBody (req){
+        const user = {
+            phoneNumber: req.body.phoneNumber,
+            password: req.body.password
         }
 
         return user;
