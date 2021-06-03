@@ -42,7 +42,8 @@ class UserControllers {
                 user
                     .save()
                     .then(() => {
-                        sendEmail.sendWelcomeEmail(lowerEmail, firstName);
+                        const htmlContent = `<h1>Remark</h1>Hello ${firstName}, <br><br>Thank you for joining us, hope you enjoy our services.`
+                        sendEmail.sendEmail(lowerEmail, 'Account creation success' , htmlContent);
                     })
                     .catch((err) => {
                         console.log(err);
@@ -92,6 +93,46 @@ class UserControllers {
                     res.status(404).json({
                         status: 404,
                         message: 'Wrong phone number or password'
+                    });
+                }
+            })
+            .catch((err) => {
+                res.status(500).json({
+                    status: 500,
+                    error: err
+                });
+            });
+    }
+
+
+    static forgotPassword(req, res){
+        const { email } = req.body;
+        const lowerEmail = email.toLowerCase();
+        const { error } = validateUser.validateForgotPassword(userBodyModels.forgotPasswordBody(req));
+
+        if(error){
+            return res.status(400).json({
+                status: 400,
+                message: error.details[0].message.replace(/"/g, '')
+            });
+        }
+
+        const randomNumber = Math.floor(Math.random() * 899999 + 100000);
+        
+        User.findOneAndUpdate({ email: lowerEmail },{ verificationCode: randomNumber })
+            .then((result) => {
+                if(result){
+                    const htmlContent = `<h1>Remark</h1>Hello again ${result.firstName}, 
+                                        <br><br>This is the verification email it contains the code for verification <h2>${randomNumber}</h2>`
+                    sendEmail.sendEmail(lowerEmail, 'Password reset email', htmlContent);
+                    res.status(201).json({
+                        status: 201,
+                        message: 'Verification email sent'
+                    });
+                }else{
+                    res.status(404).json({
+                        status: 404,
+                        message: 'Email not found!'
                     });
                 }
             })

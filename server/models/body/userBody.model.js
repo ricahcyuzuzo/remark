@@ -22,6 +22,14 @@ class userBody {
 
         return user;
     }
+
+    static forgotPasswordBody(req){
+        const user = {
+            email: req.body.email
+        }
+
+        return user;
+    }
 }
 
 export default userBody;

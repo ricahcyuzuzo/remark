@@ -4,16 +4,16 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 class sendEmail {
-    static sendWelcomeEmail(toEmail, name){
+    static sendEmail(toEmail, subject, htmlContent){
         sgMail.setApiKey(process.env.SENDGRID_API_KEY);
         const msg = {
             to: toEmail,
             from: process.env.SENDER_EMAIL,
-            subject: 'Account Creation successful',
+            subject: subject,
             text: 'Remark app',
-            html: `<h1>Remark</h1>Hello ${name}, <br><br>Thank you for joining us, hope you enjoy our services.`,
+            html: htmlContent,
         }
-    sgMail
+        sgMail
         .send(msg)
         .then(() => {
             console.log('Email sent')
