@@ -2,6 +2,7 @@ import validateUser from '../helpers/validations/userValidations';
 import userBodyModels from '../models/body/userBody.model';
 import Auth from '../helpers/authenticate';
 import User from '../models/db/users.model';
+import sendEmail from '../helpers/sendEmail';
 import Mongoose from 'mongoose';
 
 class UserControllers {
@@ -42,10 +43,11 @@ class UserControllers {
                     .save()
                     .then((result) => {
                         console.log(result);
+                        sendEmail.sendWelcomeEmail(lowerEmail, firstName);
                     })
                     .catch((err) => {
                         console.log(err);
-                    });
+                    });                
                 
                 res.status(201).json({
                     status: 201,
