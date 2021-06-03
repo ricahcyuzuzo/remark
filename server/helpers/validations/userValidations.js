@@ -53,4 +53,13 @@ const validateForgotPassword = (user) => {
     return schema.validate(user);
 }
 
-export default { validateSignUp, validatePassword, validateSignIn, validateForgotPassword }
+const validateChangePassword = (user) => {
+    const schema = Hapi.object().keys({
+        password: Hapi.string().required(),
+        code: Hapi.string().required().min(6).max(6)
+    });
+
+    return schema.validate(user);''
+}
+
+export default { validateSignUp, validatePassword, validateSignIn, validateForgotPassword, validateChangePassword }

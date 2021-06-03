@@ -57,6 +57,11 @@ class UserControllers {
                 });
 
             });
+        }else{
+            return res.status(400).json({
+                status: 400,
+                message: 'Password must not be empty, it has to be at least 8 characters long,  it has to be at least 1 lowercase letter,  it has to be at least 1 uppercase letter,  it has to be at least one digit and it has to be at least one special character',
+            });
         }
     }
 
@@ -142,6 +147,51 @@ class UserControllers {
                     error: err
                 });
             });
+    }
+
+    static changePassword (req, res) {
+        const { password, code } = req.body;
+        const { error } = validateUser.validateChangePassword(userBodyModels.changePasswordBody(req));
+        const hashedPassword = Auth.hashPassword(password);
+
+        if(error){
+            return res.status(400).json({
+                status: 201,
+                message: error.details[0].message.replace(/"/g, '')
+            })
+        }
+
+        if (validateUser.validatePassword(password) === true) {
+            User.findOneAndUpdate({ verificationCode: code }, { password: hashedPassword })
+            .then((result) => {
+                if(result){
+                    const htmlContent = `<h1>Remark</h1>Hello again ${result.firstName}, 
+                                        <br>Password changed successful`
+                    sendEmail.sendEmail(result.email, 'Password reset email', htmlContent);
+
+                    res.status(201).json({
+                        status: 201,
+                        message: 'Password changed successful'
+                    });
+                }else{
+                    res.status(404).json({
+                        status: 404,
+                        message: 'You got the wrong code!'
+                    });
+                }
+            })
+            .catch((err) => {
+                res.status(500).json({
+                    status: 500,
+                    error: err
+                });
+            });
+        }else{
+            return res.status(400).json({
+                status: 400,
+                message: 'Password must not be empty, it has to be at least 8 characters long,  it has to be at least 1 lowercase letter,  it has to be at least 1 uppercase letter,  it has to be at least one digit and it has to be at least one special character',
+            });
+        }
     }
 }
 

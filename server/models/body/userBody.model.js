@@ -30,6 +30,15 @@ class userBody {
 
         return user;
     }
+
+    static changePasswordBody = (req) => {
+        const user = {
+            password: req.body.password,
+            code: req.body.code
+        }
+
+        return user;
+    }
 }
 
 export default userBody;
