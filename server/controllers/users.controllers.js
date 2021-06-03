@@ -41,8 +41,7 @@ class UserControllers {
 
                 user
                     .save()
-                    .then((result) => {
-                        console.log(result);
+                    .then(() => {
                         sendEmail.sendWelcomeEmail(lowerEmail, firstName);
                     })
                     .catch((err) => {
