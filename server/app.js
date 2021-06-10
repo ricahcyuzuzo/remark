@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import usersRoutes from './routes/user.routes';
+import invitationRoutes from './routes/invitation.routes';
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -22,6 +23,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api', usersRoutes);
+app.use('/api', invitationRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).json({

@@ -1,4 +1,3 @@
-import { use } from "chai";
 
 class userBody {
     static signUpBody (req){
