@@ -157,6 +157,54 @@ class InvitationController {
                 });
             });
     }
+
+    static viewOneUser(req, res){
+        const { user_id } = req.query;
+        User.findById(user_id)
+            .exec()
+            .then((docs) => {
+                if (docs) {
+                    res.status(200).json({
+                        status: 200,
+                        data: docs
+                    });
+                }else{
+                    res.status(404).json({
+                        status: 404,
+                        message: 'User not found'
+                    });
+                }
+            }).catch((error) => {
+                res.status(500).json({
+                    status: 500,
+                    error: error
+                });
+            })
+    }
+
+    static suggestDateAndTime(req, res){
+        const { time, date, invitationId } = req.body;
+
+        Invitation.findByIdAndUpdate(invitationId, {date: date, time: time})
+            .then((docs) => {
+                if(docs){
+                    res.status(201).json({
+                        status: 201,
+                        message: 'Date and Time Sent successfull'
+                    });
+                }else{
+                    res.status(404).json({
+                        status: 404,
+                        message: 'Invitation Id not found'
+                    });
+                }
+            }).catch((err) => {
+                res.status(500).json({
+                    status: 500,
+                    error: err
+                });
+            })
+    }
 }
 
 export default InvitationController;
